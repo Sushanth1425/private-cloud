@@ -1,0 +1,18 @@
+# Node
+node_modules/
+npm-debug.log
+package-lock.json
+
+#env files
+.env
+
+# Keys
+backend/sm2_keys.json
+
+# Build
+frontend/dist
+frontend/node_modules/
+
+# Uploads
+backend/tmp_uploads/
+backend/uploads/
