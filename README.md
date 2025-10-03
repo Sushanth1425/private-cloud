@@ -247,9 +247,7 @@ Authorization: Bearer <jwt_token_here>
 
 
 
-Perfect! Here’s a ready-to-paste **“missing pieces” block** you can insert into your README, right after the API request examples section:
 
-````markdown
 --- 
 
 ##  API Error Responses (Examples)
@@ -300,7 +298,6 @@ Perfect! Here’s a ready-to-paste **“missing pieces” block** you can insert
 * **Backend:** Render / AWS EC2
 * **Database:** MongoDB Atlas
 
-> Once deployed, update the `.env` `FRONTEND_URL` and `MONGO_URI` accordingly.
 
 ---
 
@@ -308,7 +305,7 @@ Perfect! Here’s a ready-to-paste **“missing pieces” block** you can insert
 
 This project is licensed under the [MIT License](LICENSE).
 
-```
+
 
 ---
 
@@ -335,8 +332,8 @@ This project is licensed under the [MIT License](LICENSE).
 
 * [x] Backend API setup
 * [x] Authentication & File Management
-* [ ] Frontend React.js Dashboard
-* [ ] File Preview (images, pdfs)
+* [x] Frontend React.js Dashboard
+* [x] File Preview (images, pdfs)
 * [ ] Hybrid Malware Detection API 🔬
 * [ ] Deploy to Cloud (Vercel + Render/EC2 + MongoDB Atlas)
 
@@ -363,8 +360,4 @@ Pull requests are welcome! For major changes, please open an issue first to disc
 
 MIT License © 2025 [Sushanth B](https://github.com/Sushanth1425)
 
-```
 
----
-
-```
