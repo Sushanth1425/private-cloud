@@ -18,7 +18,7 @@ It allows users to **upload, download, share, and manage files** with authentica
 
 ##  Project Structure
 
-
+````
 sus-cloud/
 │── backend/              # Express.js Backend
 │   ├── middlewares/      # Authentication & other middlewares
