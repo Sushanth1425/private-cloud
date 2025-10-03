@@ -78,7 +78,7 @@ Backend will run at: **[http://localhost:5050](http://localhost:5050)**
 
 ## 5️. API Endpoints  
 **Content:**
-```markdown
+
 ## 🛠️ API Endpoints
 
 ### Auth Routes (`/api/auth`)
