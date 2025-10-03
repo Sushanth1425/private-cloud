@@ -15,7 +15,7 @@ connectDB()
 
 
 app.use(cors({
-  origin: process.env.FRONTEND_URL,
+  origin: process.env.FRONTEND_URL || 'http://localhost:5173',
   methods: ['GET', 'PUT', 'DELETE', 'POST'],
   credentials: true
 }))
@@ -37,5 +37,5 @@ if (!fs.existsSync(uplaod_dir)) fs.mkdirSync(uplaod_dir, {recursive: true})
 app.use('/api/auth',authRoutes)
 app.use('/api/files', filesRoutes)
 
-const port= process.env.BACKEND_PORT || 5050
+const port= process.env.PORT || 5050
 app.listen(port, ()=>console.log(`server connected to ${port}`))

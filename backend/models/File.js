@@ -9,7 +9,8 @@ const FileSchema= mongoose.Schema({
   iv: {type: String},
   sm3Hash: {type: String},
   shareToken: {type: String},
-  shareExpiresAt: {type: Date}
+  shareExpiresAt: {type: Date},
+  size: {type: Number}
 }, { timestamps: true })
 
 module.exports= mongoose.model('File', FileSchema)

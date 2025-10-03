@@ -55,7 +55,8 @@ router.post('/upload', auth, upload.single('file'), async(req, res)=>{
       storagePath,
       dekWrapped,
       iv: '',
-      sm3Hash
+      sm3Hash,
+      size: req.file.size
     })
 
     fs.unlinkSync(req.file.path)
