@@ -16,3 +16,10 @@ frontend/node_modules/
 # Uploads
 backend/tmp_uploads/
 backend/uploads/
+
+
+ml/venv/
+ml/.env/
+ml/data/
+ml/models/
+ml/src/catboost_info

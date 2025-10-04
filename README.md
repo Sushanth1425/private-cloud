@@ -18,21 +18,58 @@ It allows users to **upload, download, share, and manage files** with authentica
 
 ##  Project Structure
 
-
+````
 sus-cloud/
-│── backend/              # Express.js Backend
+│
+├── backend/              # Express.js Backend
 │   ├── middlewares/      # Authentication & other middlewares
+│   │   └── authMiddleware.js
 │   ├── models/           # MongoDB Schemas (User, File)
+│   │   ├── User.js
+│   │   └── File.js
 │   ├── routes/           # API Routes (auth, files)
+│   │   ├── auth.js
+│   │   └── files.js
 │   ├── utils/            # Crypto utils, DB connection
+│   │   └── crypto.js
 │   ├── server.js         # Entry point for backend
 │   └── .gitignore        # Ignores sensitive backend files
 │
-│── frontend/             # React.js Frontend 
-│   └── ...
+├── frontend/             # React.js Frontend 
+│   ├── .gitignore        # Ignores sensitive frontend files
+│   ├── .env              # Frontend environment variables
+│   ├── package.json      # Frontend dependencies and scripts
+│   ├── index.html        # HTML entry point for frontend
+│   ├── vite.config.js    # Vite configuration
+│   ├── src/              # Source files
+│   │   ├── api/          # API calls
+│   │   │   └── api.js
+│   │   ├── App.jsx       # Main app component
+│   │   ├── index.css     # Global styles
+│   │   ├── main.jsx      # Entry point for React app
+│   │   ├── routes/       # Route components
+│   │   │   └── PrivateRoute.jsx
+│   │   ├── pages/        # Pages for routing
+│   │   │   ├── Login.jsx
+│   │   │   ├── Register.jsx
+│   │   │   └── Dashboard.jsx
+│   │   └── components/   # Reusable UI components
+│   │       ├── Navbar.jsx
+│   │       ├── FileUpload.jsx
+│   │       ├── FileList.jsx
+│   │       └── SharePopup.jsx
+│   └── .gitignore        # Ignores sensitive frontend files
 │
-├── .gitignore            # Root ignore file
+├── ml/                   # Machine Learning folder
+│   ├── data/             # Dataset files (ignored in Git)
+│   ├── models/           # Trained models (ignored in Git)
+│   ├── src/              # ML scripts and notebooks
+│   ├── venv/             # Virtual environment (ignored in Git)
+│   └── .gitignore        # Ignores data, models, venv, caches
+│
+├── .gitignore            # Root ignore file (ignores node_modules, .env, etc.)
 ├── README.md             # Project documentation
+
 
 ````
 
@@ -78,7 +115,7 @@ Backend will run at: **[http://localhost:5050](http://localhost:5050)**
 
 ## 5️. API Endpoints  
 **Content:**
-```markdown
+
 ## 🛠️ API Endpoints
 
 ### Auth Routes (`/api/auth`)
@@ -247,9 +284,7 @@ Authorization: Bearer <jwt_token_here>
 
 
 
-Perfect! Here’s a ready-to-paste **“missing pieces” block** you can insert into your README, right after the API request examples section:
 
-````markdown
 --- 
 
 ##  API Error Responses (Examples)
@@ -300,7 +335,6 @@ Perfect! Here’s a ready-to-paste **“missing pieces” block** you can insert
 * **Backend:** Render / AWS EC2
 * **Database:** MongoDB Atlas
 
-> Once deployed, update the `.env` `FRONTEND_URL` and `MONGO_URI` accordingly.
 
 ---
 
@@ -308,7 +342,7 @@ Perfect! Here’s a ready-to-paste **“missing pieces” block** you can insert
 
 This project is licensed under the [MIT License](LICENSE).
 
-```
+
 
 ---
 
@@ -335,8 +369,8 @@ This project is licensed under the [MIT License](LICENSE).
 
 * [x] Backend API setup
 * [x] Authentication & File Management
-* [ ] Frontend React.js Dashboard
-* [ ] File Preview (images, pdfs)
+* [x] Frontend React.js Dashboard
+* [x] File Preview (images, pdfs)
 * [ ] Hybrid Malware Detection API 🔬
 * [ ] Deploy to Cloud (Vercel + Render/EC2 + MongoDB Atlas)
 
@@ -363,8 +397,3 @@ Pull requests are welcome! For major changes, please open an issue first to disc
 
 MIT License © 2025 [Sushanth B](https://github.com/Sushanth1425)
 
-```
-
----
-
-```
