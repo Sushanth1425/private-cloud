@@ -31,14 +31,14 @@ const SharePopup = ({ file, onClose }) => {
   };
 
   return (
-    <div className='fixed inset-0 bg-gray-500 bg-opacity-75 flex justify-center items-center z-50'>
+    <div className='fixed inset-0 bg-gray-500 bg-opacity-75 flex justify-center items-center z-50 '>
       <div className='bg-white p-6 rounded-lg shadow-lg w-96'>
         <h3 className='text-2xl font-semibold text-gray-800 mb-4 text-center'> File Shared </h3>
         <p className="mb-2"><strong>File Name:</strong> {file.fileName}</p>
         <p className="mb-2"><strong>File Type:</strong> {file.mimeType}</p>
         <p className="mb-2"><strong>Size:</strong> {formatSize(file.size)}</p>
         {file.shareExpiresAt && (<p className="mb-2"><strong>Expires At:</strong> {formatDate(file.shareExpiresAt)}</p>)}
-        <p className="mb-4"><strong>Uploaded At:</strong> {formatDate(file.uploadedAt)}</p>
+        <p className="mb-4"><strong>Uploaded At:</strong> {formatDate(file.createdAt)}</p>
         <div className="mb-4">
           <strong>Share Link:</strong>
           <div className="flex space-x-2 mt-1">
