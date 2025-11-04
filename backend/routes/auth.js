@@ -2,6 +2,32 @@ const router= require('express').Router()
 const bcrypt= require('bcryptjs');
 const jwt= require('jsonwebtoken');
 const User= require('../models/User');
+const admin= require('../firebaseAdmin')
+
+router.post('/google-login', async(req, res)=>{
+  try {
+    const {token}= req.body;
+    const decodedToken= await admin.auth().verifyIdToken(token)
+    let user= await User.findOne({email: decodedToken.email})
+
+    if (!user){
+      user= new User({
+        name: decodedToken.name,
+        email: decodedToken.email,
+        password: '',
+      })
+      await user.save();
+    }
+    const payload= {id: user._id}
+    const jwtToken= jwt.sign(payload, process.env.JWT_SECRET, {expiresIn: '7d'})
+
+    res.json({ token: jwtToken });
+  } 
+  catch (err) {
+    console.error(err.message);
+    return res.status(500).json({ msg: 'Google Login Failed' })
+  }
+})
 
 router.post('/register', async(req, res)=>{
   try{
