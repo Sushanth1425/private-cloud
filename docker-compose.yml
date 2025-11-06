@@ -1,6 +1,6 @@
 services:
   mongo:
-    image: mongo:6
+    image: arm64v8/mongo:4.4.18
     restart: unless-stopped
     volumes:
       - mongo_data:/data/db

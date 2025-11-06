@@ -21,10 +21,11 @@ const FileList = () => {
     const fetchFiles = async () => {
       try {
         const res = await api.get('/files/list');
-        setFiles(res.data.files);
+        setFiles(res.data.files || []);
       }
       catch (err) {
         console.error("Failed to load files", err);
+        setFiles([]); 
       }
     };
     fetchFiles();
