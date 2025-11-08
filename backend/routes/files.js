@@ -3,6 +3,8 @@ const multer= require('multer')
 const fs= require('fs');
 const path= require('path');
 const crypto= require('crypto')
+const axios= require('axios')
+const FormData = require('form-data');
 
 const { genDEKHex, generateSM4Key, sm4EncryptHex, wrapDEK, sm4DecryptHex, hashSM3Hex }= require('../utils/crypto');
 const { sm2 }= require('sm-crypto')
@@ -27,28 +29,73 @@ if (fs.existsSync(keyFile)) {
 }
 
 
+const MALWARE_API_URL = process.env.MALWARE_API_URL || 'http://localhost:8000/api/malware/scan';
+
 // uploading a file
-router.post('/upload', auth, upload.single('file'), async(req, res)=>{
-  try{
-    if (!req.file) return res.status(400).json({msg: 'Select a file to upload'})
-    const fileBuffer= fs.readFileSync(req.file.path)
+router.post('/upload', auth, upload.single('file'), async (req, res) => {
+  try {
+    if (!req.file) return res.status(400).json({ msg: 'Select a file to upload' });
+
+    console.log(`Upload directory: ${process.env.UPLOAD_DIR}`);
+    console.log(`Received upload: ${req.file.originalname} tmp=${req.file.path} size=${req.file.size}`);
+
+    // 1️⃣ Scan for malware using FastAPI
+    try {
+      const fileStream = fs.createReadStream(req.file.path);
+      const form = new FormData();
+      // third arg can be filename or options
+      form.append('file', fileStream, { filename: req.file.originalname });
+
+      console.log(`Calling MALWARE_API_URL=${MALWARE_API_URL} for ${req.file.originalname}`);
+      const scanResponse = await axios.post(MALWARE_API_URL, form, {
+        headers: {
+          ...form.getHeaders()
+        },
+        maxBodyLength: Infinity,
+        timeout: 120000
+      });
+
+      console.log('Malware API response:', scanResponse.data);
+
+      const { is_malicious, confidence, prediction_class, malicious_probability } = scanResponse.data;
+
+      if (is_malicious) {
+        // remove tmp file
+        try { fs.unlinkSync(req.file.path); } catch (e) { console.warn('Failed remove tmp file', e); }
+
+        return res.status(403).json({
+          msg: 'Upload blocked: file appears malicious',
+          prediction_class: prediction_class || 'Malicious',
+          confidence: confidence ?? null,
+          malicious_probability: malicious_probability ?? null
+        });
+      }
+    } catch (scanErr) {
+      console.error('Error calling malware scan API:', scanErr.message || scanErr);
+      // keep the tmp file for debugging if you want or remove it
+      try { fs.unlinkSync(req.file.path); } catch (_) {}
+      return res.status(502).json({ msg: 'Malware scanner unavailable', error: scanErr.message || String(scanErr) });
+    }
+
+    // 2️⃣ Proceed with encryption and save
+    const fileBuffer = fs.readFileSync(req.file.path);
 
     // 1) generate DEK, encrypt file with SM4
-    const dekHex= genDEKHex();
-    const cipherHex= sm4EncryptHex(fileBuffer, dekHex);
+    const dekHex = genDEKHex();
+    const cipherHex = sm4EncryptHex(fileBuffer, dekHex);
 
     // 2) wrap dek with SM2 (using server public key)
-    const dekWrapped= wrapDEK(dekHex, sm2Keypair.publicKey)
+    const dekWrapped = wrapDEK(dekHex, sm2Keypair.publicKey);
 
     // 3) write encrypted blob to storage
-    const storageFilename= `${Date.now()}_${req.file.originalname}.enc`
-    const storagePath= path.join(process.env.UPLOAD_DIR  || 'uploads', storageFilename)
-    fs.writeFileSync(storagePath, Buffer.from(cipherHex, 'hex'))
+    const storageFilename = `${Date.now()}_${req.file.originalname}.enc`;
+    const storagePath = path.join(process.env.UPLOAD_DIR || 'uploads', storageFilename);
+    fs.writeFileSync(storagePath, Buffer.from(cipherHex, 'hex'));
 
-    // 4) SM3 hash of original 
-    const sm3Hash= hashSM3Hex(fileBuffer)
+    // 4) SM3 hash of original
+    const sm3Hash = hashSM3Hex(fileBuffer);
 
-    const fileDoc= await File.create({
+    const fileDoc = await File.create({
       userId: req.user._id,
       fileName: req.file.originalname,
       mimeType: req.file.mimetype,
@@ -57,17 +104,19 @@ router.post('/upload', auth, upload.single('file'), async(req, res)=>{
       iv: '',
       sm3Hash,
       size: req.file.size
-    })
+    });
 
-    fs.unlinkSync(req.file.path)
-    res.json({msg: 'Upload successful!!', fileId: fileDoc._id})
+    // cleanup tmp
+    try { fs.unlinkSync(req.file.path); } catch (e) { console.warn('Failed to remove tmp:', e); }
 
-  }
-  catch(err){
-    console.error(err)
+    res.json({ msg: 'Upload successful!!', fileId: fileDoc._id });
+
+  } catch (err) {
+    console.error('Upload handler error:', err);
     return res.status(500).json({ msg: 'Upload error, Try Again!!' });
   }
-})
+});
+
 
 // view uploads
 router.get('/list', auth, async(req,res)=>{
