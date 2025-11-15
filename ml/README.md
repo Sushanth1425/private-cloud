@@ -298,5 +298,4 @@ docker run -p 8000:8000 malware-api
 
 
 
-### **“My malware detection engine is a fully isolated FastAPI microservice that performs static analysis on uploaded files using a hybrid ML ensemble trained on the BODMAS dataset. It extracts 2381 behavioral, structural, and byte-level features, preprocesses them using a Variance Threshold + StandardScaler + feature selection pipeline, and classifies files using a stacking ensemble model. The MERN backend communicates with this engine before storing files, ensuring only clean files enter the private cloud storage.”**
 
