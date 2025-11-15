@@ -1,6 +1,6 @@
 
 
-# 🚀 **Malware Detection Microservice – README.md**
+#  **Malware Detection Microservice – README.md**
 
 A standalone **FastAPI microservice** used inside **Sus-Cloud (Mini Private Cloud)** to scan user-uploaded files using:
 
@@ -15,11 +15,11 @@ This service runs separately from the MERN backend and exposes clean HTTP APIs f
 
 ---
 
-# 📌 **1. Overview**
+#  **1. Overview**
 
 This API performs malware detection on files uploaded through the cloud interface.
 
-### ⭐ Key Features:
+###  Key Features:
 
 * **FastAPI** backend for high-performance scanning
 * **2381-feature static feature extraction**
@@ -33,7 +33,7 @@ This API performs malware detection on files uploaded through the cloud interfac
 
 ---
 
-# 🧠 **2. Architecture**
+#  **2. Architecture**
 
 ```
 
@@ -50,7 +50,7 @@ The malware API is completely isolated from the main backend for:
 
 ---
 
-# 📂 **3. Directory Structure**
+#  **3. Directory Structure**
 
 ```
 
@@ -70,7 +70,7 @@ ml/
 
 ---
 
-# ⚙️ **4. Installation**
+#  **4. Installation**
 
 ### **Install dependencies**
 
@@ -92,9 +92,9 @@ http://localhost:8000
 
 ---
 
-# 🔥 **5. API Endpoints**
+#  **5. API Endpoints**
 
-## **📌 POST /api/malware/scan**
+## ** POST /api/malware/scan**
 
 Upload a file and receive malware classification.
 
@@ -141,7 +141,7 @@ curl -X POST "http://localhost:8000/api/malware/scan" \
 
 ---
 
-## 🧪 **EICAR Signature Handling**
+##  **EICAR Signature Handling**
 
 If the file contains the EICAR test string:
 
@@ -156,7 +156,7 @@ If the file contains the EICAR test string:
 
 ---
 
-## **📌 GET /api/malware/model-info**
+## ** GET /api/malware/model-info**
 
 Returns model metadata.
 
@@ -173,7 +173,7 @@ Returns model metadata.
 
 ---
 
-## **📌 GET /api/malware/health**
+## ** GET /api/malware/health**
 
 ```json
 {
@@ -185,7 +185,7 @@ Returns model metadata.
 
 ---
 
-# 🔍 **6. How Detection Works (Internal Pipeline)**
+#  **6. How Detection Works (Internal Pipeline)**
 
 ### **Step 1: Save file to a temporary sandbox**
 
@@ -226,7 +226,7 @@ This ensures:
 
 ---
 
-# 🛡️ **7. Security Advantages**
+#  **7. Security Advantages**
 
 | Security Feature         | Benefit                              |
 | ------------------------ | ------------------------------------ |
@@ -239,7 +239,7 @@ This ensures:
 
 ---
 
-# 📘 **8. Integration With MERN Backend**
+#  **8. Integration With MERN Backend**
 
 Your Node backend sends files to:
 
@@ -260,11 +260,11 @@ If not malicious
 → Stores file in disk
 → Saves metadata in MongoDB
 
-This is your project’s **core novelty**.🔥
+This is your project’s **core novelty**.
 
 ---
 
-# ⚡ **9. Docker Deployment**
+#  **9. Docker Deployment**
 
 Create `Dockerfile`:
 
