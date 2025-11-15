@@ -1,5 +1,5 @@
 
-```markdown
+
 # 🚀 **Malware Detection Microservice – README.md**
 
 A standalone **FastAPI microservice** used inside **Sus-Cloud (Mini Private Cloud)** to scan user-uploaded files using:
@@ -60,9 +60,10 @@ ml/
 │    ├── bodmas_scaler.pkl
 │    ├── bodmas_selector.pkl
 │    └── bodmas_features.pkl
-├── routes/
-│    └── malware.py  <-- main scanning logic
-├── run_malware_api.py  <-- FastAPI instance
+├── src/
+│    ├── run_malware_api.py  
+│    └── malware.py  
+│ 
 └── README.md
 
 ````
@@ -295,19 +296,7 @@ docker run -p 8000:8000 malware-api
 
 ---
 
-# 🎯 **10. What to Present in Your Review**
 
-You can confidently say:
 
 ### **“My malware detection engine is a fully isolated FastAPI microservice that performs static analysis on uploaded files using a hybrid ML ensemble trained on the BODMAS dataset. It extracts 2381 behavioral, structural, and byte-level features, preprocesses them using a Variance Threshold + StandardScaler + feature selection pipeline, and classifies files using a stacking ensemble model. The MERN backend communicates with this engine before storing files, ensuring only clean files enter the private cloud storage.”**
 
-This wins **full marks**.
-
----
-
-# 🎉 Done!
-
-```
-
-This is a fully formatted markdown file that you can directly use for your `README.md`. Let me know if you'd like to adjust or add anything!
-```
