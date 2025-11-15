@@ -12,7 +12,7 @@ services:
     depends_on:
       - mongo
     volumes:
-      - ./backend/uploads:/app/uploads
+      - ./backend/uploads:/app/uploads #- /media/sus/MyHDD/sus-cloud-files:/app/uploads
     ports:
       - "5050:5050"
     restart: unless-stopped
