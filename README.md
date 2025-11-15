@@ -1,24 +1,41 @@
 
-# Sus-Cloud  
-A secure **Private Cloud Storage System** built with the **MERN stack**.  
-It allows users to **upload, download, share, and manage files** with authentication and encryption.  
+# SUS-Cloud — Mini Private Cloud with Malware Detection & Secure File Sharing
 
----
+A Mini Private Cloud built using Raspberry Pi + MERN Stack + FastAPI ML Service designed to offer secure file upload, download, and sharing, with on-device malware detection, AES-based encryption, and private network accessibility via tunneling.
+
+SUS-Cloud ensures that no malicious file ever enters your private cloud storage.
 
 ##  Features
-- **User Authentication (JWT)** – Secure login & registration.  
-- **File Upload & Download** – Users can upload and retrieve files.  
-- **File Sharing (link-based)** – Generate secure share links.  
-- **File Deletion** – Users can delete their files.  
-- **Encryption** – Files are encrypted with SM Encryptions before storage.  
-- **Clean API structure** with Express.  
-- **Ready for frontend integration** (React.js).  
 
----
+### 🔹 1. Secure Private Cloud
+- Upload, download, and share files privately
+- User Authentication (JWT)
+- Encrypted storage on Raspberry Pi HDD
 
-##  Project Structure
+### 🔹 2. AI-Driven Malware Detection
+- ML model trained on EMBER malware dataset
+- FastAPI inference server
+- Extracts features + predicts using ML ensemble
+- Blocks malicious files before they reach disk
 
-````
+### 🔹 3. Full MERN Web App
+- React Frontend
+- Node.js Express Backend
+- MongoDB for users, metadata, logs
+- Real-time malicious logs + alerts
+
+### 🔹 4. Hosting & Tunneling
+- **Frontend**: Vercel 
+- **Backend**: Raspberry Pi
+- **ML API**:  Render 
+
+### 🔹 5. Compatibility
+- Works on LAN, hotspot, or remote access
+- Cross-platform Web UI
+
+##  Project Architecture
+
+```plaintext
 sus-cloud/
 │
 ├── backend/              # Express.js Backend
@@ -70,334 +87,169 @@ sus-cloud/
 ├── .gitignore            # Root ignore file (ignores node_modules, .env, etc.)
 ├── README.md             # Project documentation
 
-
 ````
 
----
+##  Machine Learning (EMBER Dataset)
 
-##  Backend Setup
+### Models Used
 
-### 1️. Clone Repository
+* LightGBM
+* Random Forest
+* XGBoost
+* CatBoost
+* Logistic Regression Meta-Learner
+
+### Pipeline
+
+1. Upload file
+2. Features extracted (PE Header features)
+3. Model inference
+
+#### Response:
+
+```json
+{
+  "label": "malicious",
+  "confidence": 0.9821
+}
+```
+
+* **If malicious**: file is rejected
+* **If benign**: Node backend stores file in HDD
+
+##  FastAPI — Malware Detection API
+
+### Run Locally
+
 ```bash
-git clone https://github.com/Sushanth1425/private-cloud.git
-cd private-cloud/backend
-````
+cd ml-service
+pip install -r requirements.txt
+uvicorn app:app --host 0.0.0.0 --port 8000
+```
 
-### 2️. Install Dependencies
+* **POST /scan**
+* **POST** `http://<raspberry-ip>:8000/scan`
+
+#### Body (multipart/form-data):
+
+Returns:
+
+```json
+{
+  "file_name": "test.exe",
+  "prediction": "benign",
+  "probability": 0.0432
+}
+```
+
+##  Node.js Backend (Express)
+
+### Start Server
 
 ```bash
 npm install
-```
-
-### 3️. Environment Variables
-
-Create a `.env` file inside the `backend/` directory:
-
-```ini
-PORT=5050
-MONGO_URI=your_mongodb_connection_string
-JWT_SECRET=your_jwt_secret_key
-UPLOAD_DIR=./uploads
-FRONTEND_URL=your_frontend_url # preferablly (http://localhost:5173/)
-
-```
-
-
-### 4️. Start Backend Server
-
-```bash
 npm start
 ```
 
-Backend will run at: **[http://localhost:5050](http://localhost:5050)**
+### Responsibilities
 
----
+* Receives file from user
+* Sends file to FastAPI `/scan`
+* Allows upload only if safe
+* Stores file inside Pi HDD
+* JWT auth
+* Logs every action in MongoDB
 
-## 5️. API Endpoints  
-**Content:**
+##  React Frontend
 
-## 🛠️ API Endpoints
+Built using:
 
-### Auth Routes (`/api/auth`)
-- `POST /register` → Register new user
-- `POST /login` → Login user
+* React + React Router
+* Axios
+* Context API
+*  Tailwind CSS
 
-### File Routes (`/api/files`)
-- `POST /upload` → Upload file
-- `GET /download/:id` → Download file
-- `DELETE /delete/:id` → Delete file
-- `POST /share/:id` → Generate shareable link
-- `GET /shared/:token` → Access shared file
+### Pages:
 
----
+* Login 
+* Register
+* Dashboard
 
-##  API Request Examples
 
-### 1. Register User
 
-**Endpoint:** `POST /api/auth/register`
-**Request Body (JSON):**
 
-```json
-{
-  "name": "John Doe",
-  "email": "john@example.com",
-  "password": "password123"
-}
+### Running Frontend
+
+```bash
+npm install
+npm run dev
 ```
 
-**Response (Success 201):**
+##  MongoDB
 
-```json
-{
-  "message": "User registered successfully",
-  "user": {
-    "_id": "64f1a1e2c12345abcdef1234",
-    "name": "John Doe",
-    "email": "john@example.com"
-  },
-  "token": "jwt_token_here"
-}
-```
+### Collections:
 
----
+* users
+* files
 
-### 2. Login User
 
-**Endpoint:** `POST /api/auth/login`
-**Request Body (JSON):**
+Used for:
 
-```json
-{
-  "email": "john@example.com",
-  "password": "password123"
-}
-```
+* File metadata
+* Login sessions
+* Malware logs
+* Sharing links
 
-**Response (Success 200):**
+##  Encryption Used
 
-```json
-{
-  "message": "Login successful",
-  "user": {
-    "_id": "64f1a1e2c12345abcdef1234",
-    "name": "John Doe",
-    "email": "john@example.com"
-  },
-  "token": "jwt_token_here"
-}
-```
+* **SM2 Encryption**: File encrypted before writing to HDD
+* Key stored securely in environment variables
+* **SM 3 and SM 4** mode for integrity
+* **Password Hashing**: bcrypt
+* **Tokens**: JWT (access + refresh)
 
----
+##  Hosting / Deployment Explained
 
-### 3. Upload File
+### ✔ Frontend (React)
 
-**Endpoint:** `POST /api/files/upload`
-**Headers:**
+* **Vercel** 
 
-```
-Authorization: Bearer <jwt_token_here>
-Content-Type: multipart/form-data
-```
 
-**Form Data:**
+### ✔ Backend (Node.js)
 
-```
-file: <choose_file>
-```
+* Runs on Raspberry Pi
+* Accessible inside LAN or hotspot
+* Can expose using:
+  * Cloudflare Tunnel 
 
-**Response (Success 201):**
 
-```json
-{
-  "message": "File uploaded successfully",
-  "file": {
-    "_id": "64f1b2f3c12345abcdef5678",
-    "filename": "example.pdf",
-    "owner": "64f1a1e2c12345abcdef1234",
-    "url": "/uploads/example_encrypted.pdf"
-  }
-}
-```
+### ✔ ML API (FastAPI)
 
----
+* Options:
 
-### 4. Download File
+  * Run on same Raspberry Pi 
+  * Host separately on Render
 
-**Endpoint:** `GET /api/files/download/:id`
-**Headers:**
 
-```
-Authorization: Bearer <jwt_token_here>
-```
+### Why Raspberry Pi?
 
-**Response:** Returns the requested file as attachment.
+* Private cloud stays local
+* No third-party server dependency
+* Secure + cost-effective
 
----
+##  Novelty 
 
-### 5. Delete File
+### Compared to Google Drive / Dropbox / OneDrive:
 
-**Endpoint:** `DELETE /api/files/delete/:id`
-**Headers:**
-
-```
-Authorization: Bearer <jwt_token_here>
-```
-
-**Response (Success 200):**
-
-```json
-{
-  "message": "File deleted successfully"
-}
-```
-
----
-
-### 6. Generate Shareable Link
-
-**Endpoint:** `POST /api/files/share/:id`
-**Headers:**
-
-```
-Authorization: Bearer <jwt_token_here>
-```
-
-**Response (Success 200):**
-
-```json
-{
-  "message": "Shareable link generated",
-  "link": "http://localhost:5173/shared/abc123token"
-}
-```
-
----
-
-### 7. Access Shared File
-
-**Endpoint:** `GET /api/files/shared/:token`
-**Response:** Returns the shared file for download.
-
-
----
-
-
-
-
---- 
-
-##  API Error Responses (Examples)
-
-### 1. Register Error
-**Response (400 Bad Request):**
-```json
-{
-  "error": "User with this email already exists"
-}
-````
-
-### 2. Login Error
-
-**Response (401 Unauthorized):**
-
-```json
-{
-  "error": "Invalid credentials"
-}
-```
-
-### 3. File Upload Error
-
-**Response (400 Bad Request):**
-
-```json
-{
-  "error": "No file provided"
-}
-```
-
-### 4. File Access Error
-
-**Response (403 Forbidden / 404 Not Found):**
-
-```json
-{
-  "error": "You do not have permission to access this file"
-}
-```
-
----
-
-## 🚀 Deployment 
-
-* **Frontend:** Vercel
-* **Backend:** Render / AWS EC2
-* **Database:** MongoDB Atlas
-
-
----
-
-## 📄 License
-
-This project is licensed under the [MIT License](LICENSE).
-
-
-
----
-
-
-
-
-##  Frontend 
-
-* Will be built with **React.js**.
-* Integrated with backend APIs using **Axios**.
-* Includes **login system, dashboard, file manager UI**.
-
----
-
-##  Security
-
-* Files are encrypted using custom crypto utils before being stored.
-* JWT authentication protects all private routes.
-* Sensitive data (`.env`, `keys`, `uploads`) is ignored via `.gitignore`.
-
----
-
-##  To-Do
-
-* [x] Backend API setup
-* [x] Authentication & File Management
-* [x] Frontend React.js Dashboard
-* [x] File Preview (images, pdfs)
-* [ ] Hybrid Malware Detection API 🔬
-* [ ] Deploy to Cloud (Vercel + Render/EC2 + MongoDB Atlas)
-
----
-
-##  Tech Stack
-
-* **Frontend** → React.js 
-* **Backend** → Node.js, Express.js
-* **Database** → MongoDB
-* **Auth** → JWT
-* **File Handling** → Multer
-* **Encryption** → Custom crypto (SM2 keys, AES, etc.)
-
----
-
-##  Contributing
-
-Pull requests are welcome! For major changes, please open an issue first to discuss.
-
----
-
-##  License
-
-MIT License © 2025 [Sushanth B](https://github.com/Sushanth1425)
-
-```
+| Feature                      | Cloud Services | SUS-Cloud                    |
+| ---------------------------- | -------------- | ---------------------------- |
+| Malware scanning             | Basic          | ML trained on EMBER dataset |
+| Private local cloud          | ❌              | ✔                            |
+| Encryption before disk write | ❌              | ✔ (SM2/SM3/SM4)              |
+| Self-hosted on Raspberry Pi  | ❌              | ✔                            |
+| Custom ML API                | ❌              | ✔                            |
+| No recurring charges         | ❌              | ✔                            |
+| Works offline                | ❌              | ✔                            |
 
 ---
 
