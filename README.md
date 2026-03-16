@@ -5,6 +5,15 @@ A Mini Private Cloud built using Raspberry Pi + MERN Stack + FastAPI ML Service 
 
 SUS-Cloud ensures that no malicious file ever enters your private cloud storage.
 
+---
+##  Live Demo
+
+* **Frontend (Vercel):** [https://private-cloud-ten.vercel.app/](https://private-cloud-ten.vercel.app/)
+* **Backend API:** [https://private-cloud-t731.onrender.com/](https://private-cloud-t731.onrender.com/)
+
+---
+
+
 ##  Features
 
 ### 🔹 1. Secure Private Cloud
